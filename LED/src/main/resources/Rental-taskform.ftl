@@ -194,7 +194,7 @@
                         data: JSON.stringify(json)
                     }).done(function (responseText) {
                                 jQuery("#pid").val(responseText._id.$oid);
-                                startTask(getFormValues(document.getElementById("form-data")));
+                                startProcess(getFormValues(document.getElementById("form-data")));
                             });
                 }
             }
