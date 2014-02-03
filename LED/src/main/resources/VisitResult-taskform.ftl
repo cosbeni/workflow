@@ -4,7 +4,7 @@
    <h4>タスクを始めるには、引受する必要があります</h4> 
 </#if>
 <#if task.taskData.status = 'Reserved'>	
-   <h4>面談する場合はタスクをスタートして下さい。</h4> 
+   <h4>入力する場合はタスクをスタートして下さい。</h4> 
 </#if> 
 <#if task.taskData.status = 'InProgress'>    
             <div class="row-fluid">
