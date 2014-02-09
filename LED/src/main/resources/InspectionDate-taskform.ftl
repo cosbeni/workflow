@@ -19,7 +19,9 @@
                             </div>
                             <div id="process" class="tab-pane">
                                 <div id="rental"></div>
-                                <input type="button" class="save btn-large btn-primary" value="完了"/>
+                                <input type="button" class="release btn-large btn-primary" value="リリース"/>
+                                <input type="button" class="save btn-large btn-primary" value="保存"/>
+                                <input type="button" class="complete btn-large btn-primary" value="完了"/>
                             </div>
                         </div>
                     </div>
@@ -66,6 +68,9 @@
                             });
                 });
 
+        jQuery("#process .release").click(function () {
+                releaseTask(getFormValues(document.getElementById("form-data")));
+        });
         jQuery("#process .save").click(function () {
             Alpaca.fieldInstances["ＬＥＤレンタル"].validate(true);
             Alpaca.fieldInstances["ＬＥＤレンタル"].renderValidationState(true);
@@ -79,8 +84,25 @@
                     contentType: "application/json; charset=UTF-8",
                     data: JSON.stringify(json)
                 }).done(function (responseText) {
-                            alert("OID:" + responseText._id.$oid + "を更新しました。");
-                        });
+                    alert("OID:" + responseText._id.$oid + "を更新しました。");
+                });
+            }
+        });
+        jQuery("#process .complete").click(function () {
+            Alpaca.fieldInstances["ＬＥＤレンタル"].validate(true);
+            Alpaca.fieldInstances["ＬＥＤレンタル"].renderValidationState(true);
+            if (Alpaca.fieldInstances["ＬＥＤレンタル"].isValid(true)) {
+                var json = Alpaca.fieldInstances["ＬＥＤレンタル"].getValue();
+                json._id = { "$oid" : pid};
+                jQuery.ajax({
+                    url: Alpaca.user.server + "/server/data/plenty/ＬＥＤレンタル",
+                    type: "POST",
+                    dataType: "json",
+                    contentType: "application/json; charset=UTF-8",
+                    data: JSON.stringify(json)
+                }).done(function (responseText) {
+                    completeTask(getFormValues(document.getElementById("form-data")));
+                });
             }
         });
     };

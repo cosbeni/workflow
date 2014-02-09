@@ -29,7 +29,7 @@
                             </div>
                             <div id="process" class="tab-pane">
                                 <div id="rental"></div>
-                                <input type="button" class="save btn-large btn-primary" value="完了"/>
+                                <input type="button" class="save btn-large btn-primary" value="開始"/>
                             </div>
                         </div>
                     </div>
