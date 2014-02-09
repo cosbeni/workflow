@@ -9,15 +9,8 @@
 <#if task.taskData.status = 'InProgress'>    
             <div class="row-fluid">
                 <div class="span12">
-                    <div class="tabbable">
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="#customer" data-toggle="tab">店舗情報</a></li>
-                        </ul>
-                        <div class="tab-content">
-                            <div id="customer" class="tab-pane active">
-                            </div>
-                            <div id="process" class="tab-pane">
-                                <div id="rental"></div>
+                            <div id="process">
+                                <div id="customer"></div>
                                 <input type="button" class="release btn-large btn-primary" value="リリース"/>
                                 <input type="button" class="save btn-large btn-primary" value="保存"/>
                                 <input type="button" class="complete btn-large btn-primary" value="完了"/>
