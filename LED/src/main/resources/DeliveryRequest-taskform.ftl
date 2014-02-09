@@ -93,16 +93,20 @@
             Alpaca.fieldInstances["ＬＥＤレンタル"].renderValidationState(true);
             if (Alpaca.fieldInstances["ＬＥＤレンタル"].isValid(true)) {
                 var json = Alpaca.fieldInstances["ＬＥＤレンタル"].getValue();
-                json._id = { "$oid" : pid};
-                jQuery.ajax({
-                    url: Alpaca.user.server + "/server/data/plenty/ＬＥＤレンタル",
-                    type: "POST",
-                    dataType: "json",
-                    contentType: "application/json; charset=UTF-8",
-                    data: JSON.stringify(json)
-                }).done(function (responseText) {
-                    completeTask(getFormValues(document.getElementById("form-data")));
-                });
+                if(json.受注状況 == "追客"){
+                	alert("受注状況は追客以外を選んで下さい。")
+                } else {
+                	json._id = { "$oid" : pid};
+                	jQuery.ajax({
+                    	url: Alpaca.user.server + "/server/data/plenty/ＬＥＤレンタル",
+                    	type: "POST",
+                    	dataType: "json",
+                    	contentType: "application/json; charset=UTF-8",
+                    	data: JSON.stringify(json)
+                	}).done(function (responseText) {
+                    	completeTask(getFormValues(document.getElementById("form-data")));
+                	});
+                }
             }
         });
     };
