@@ -23,6 +23,7 @@
     formView.init = function () {
         var Alpaca = jQuery.alpaca;
         var pid = jQuery('#pid').val();
+        var cid = '';
         jQuery.ajax({
             url: Alpaca.user.server + "/server/data/plenty/ＬＥＤレンタル?id=" + pid,
             type: "GET",
@@ -42,6 +43,7 @@
                                     "viewSource": Alpaca.user.server + "/server/design/view/plenty/?id=" + responseText.view + "&sid=" + responseText.schema,
                                     "dataSource": Alpaca.user.server + "/server/data/plenty/顧客?id=" + data.顧客ＩＤ
                                 });
+                                cid = data.顧客ＩＤ;
                             });
                 });
 
@@ -53,6 +55,7 @@
             Alpaca.fieldInstances["顧客"].renderValidationState(true);
             if (Alpaca.fieldInstances["顧客"].isValid(true)) {
                 var json = Alpaca.fieldInstances["顧客"].getValue();
+                json._id = { "$oid" : cid};
                 jQuery.ajax({
                     url: Alpaca.user.server + "/server/data/plenty/顧客",
                     type: "POST",
@@ -69,6 +72,7 @@
             Alpaca.fieldInstances["顧客"].renderValidationState(true);
             if (Alpaca.fieldInstances["顧客"].isValid(true)) {
                 var json = Alpaca.fieldInstances["顧客"].getValue();
+                json._id = { "$oid" : cid};
                 jQuery.ajax({
                     url: Alpaca.user.server + "/server/data/plenty/顧客",
                     type: "POST",
