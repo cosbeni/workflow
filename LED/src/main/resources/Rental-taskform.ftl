@@ -5,6 +5,7 @@
                     <div class="tabbable">
                         <ul class="nav nav-tabs">
                             <li class="active"><a href="#customer" data-toggle="tab">顧客データ選択・入力</a></li>
+                            <li><a href="#address" data-toggle="tab" class="tab-item tab-item-designer">郵便番号検索</a></li>                            
                             <li><a href="#process" data-toggle="tab" class="tab-item tab-item-designer">リードデータ入力</a></li>
                         </ul>
                         <div class="tab-content">
@@ -27,6 +28,16 @@
                                     <input type="button" class="save btn-large btn-success" value="保存"/>
                                 </div>
                             </div>
+                            <div id="address" class="tab-pane">
+                                <div class="row-fluid">
+                                    <div class="span12">
+                                        <div>
+                                            <table class="dataTable table table-striped table-bordered table-hover">
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                            
                             <div id="process" class="tab-pane">
                                 <div id="rental"></div>
                                 <input type="button" class="save btn-large btn-primary" value="開始"/>
@@ -98,6 +109,15 @@
                     "bProcessing": true,
                     "bServerSide": true,
                     "sAjaxSource": dataTableURL + collectionName,
+                    "fnServerData": function ( sSource, aoData, fnCallback ) {
+                        for (k = 0; k < aoData.length; k++) {
+                            if (aoData[k].name == "sSearch_1")
+                                aoData[k].value = true;
+                        }
+                        $.getJSON( sSource, aoData, function (json) {
+                            fnCallback(json)
+                        } );
+                    },
                     "aoColumns": [
                         {
                             mData: "_id.$oid",
@@ -105,8 +125,33 @@
                             "sWidth": "10%"
                         },
                         {
+                            mData: "店舗",
+                            sTitle: "店舗",
+                            bVisible: false
+                        },
+                        {
                             mData: "名称",
-                            sTitle: "店舗名"
+                            sTitle: "名称"
+                        },
+                        {
+                            mData: "住所.郵便番号",
+                            sTitle: "郵便番号"
+                        },
+                        {
+                            mData: "住所.都道府県",
+                            sTitle: "都道府県"
+                        },
+                        {
+                            mData: "住所.市区町村",
+                            sTitle: "市区町村"
+                        },
+                        {
+                            mData: "住所.番地",
+                            sTitle: "番地"
+                        },
+                        {
+                            mData: "住所.建物名",
+                            sTitle: "建物名"
                         },
                         {
                             mData: "電話番号",
@@ -133,6 +178,94 @@
                     }
                 });
 
+        jQuery('#address .dataTable')
+                .dataTable(
+                {
+                    "aLengthMenu": [
+                        [ 10, 25, 50, -1 ],
+                        [ 10, 25, 50, "全部" ]
+                    ],
+                    "bAutoWidth": true,
+                    "iDisplayLength": 10,
+                    "sDom": "<'row-fluid'<'span6'l><'span6'f>r><'row-fluid'<'span12'p>>t<'row-fluid'<'span6'i><'span6'p>>",
+                    "sPaginationType": "bootstrap",
+                    "oLanguage": {
+                        "oAria": {
+                            "sSortAscending": ": 昇順にソート",
+                            "sSortDescending": ": 降順にソート"
+                        },
+                        "oPaginate": {
+                            "sFirst": "最初",
+                            "sLast": "最後",
+                            "sNext": "次",
+                            "sPrevious": "前"
+                        },
+                        "sEmptyTable": "表示可能なデータがありません。",
+                        "sInfo": "全 _TOTAL_ 件中の _START_ から _END_ を表示中",
+                        "sInfoEmpty": "表示可能なデータがありません。",
+                        "sInfoFiltered": "(全 _MAX_ 件からフィルター中)",
+                        "sInfoPostFix": "",
+                        "sInfoThousands": ",",
+                        "sLengthMenu": "ページ毎に _MENU_ レコード",
+                        "sLoadingRecords": "ロード中...",
+                        "sProcessing": "処理中...",
+                        "sSearch": "検索:",
+                        "sUrl": "",
+                        "sZeroRecords": "一致するレコードがありません。"
+                    },
+                    "bProcessing": true,
+                    "bServerSide": true,
+                    "sAjaxSource": dataTableURL + "郵便番号",
+                    "aoColumns": [
+                        {
+                            mData: "_id.$oid",
+                            sTitle: "ID",
+                            "sWidth": "10%"
+                        },
+                        {
+                            mData: "郵便番号",
+                            sTitle: "郵便番号"
+                        },
+                        {
+                            mData: "都道府県名",
+                            sTitle: "都道府県名"
+                        },
+                        {
+                            mData: "市区町村名",
+                            sTitle: "市区町村名"
+                        },
+                        {
+                            mData: "町域名",
+                            sTitle: "町域名"
+                        },
+                        {
+                            mData: "市区町村名フリガナ",
+                            sTitle: "市区町村名フリガナ"
+                        },
+                        {
+                            mData: "町域名フリガナ",
+                            sTitle: "町域名フリガナ"
+                        }
+                    ],
+                    "fnDrawCallback": function (oSettings) {
+                        jQuery('#address .dataTable tbody tr').click(function () {
+                            var nTds = jQuery('td', this);
+                            var id = jQuery(nTds[0]).text();
+                            jQuery.ajax({
+                                url: Alpaca.user.server + "/server/data/plenty/郵便番号?id=" + id,
+                                dataType: "json",
+                                contentType: "application/json; charset=UTF-8"
+                            }).done(function(responseText){
+                                        var json = Alpaca.fieldInstances["顧客"].getValue();
+                                        json.住所.郵便番号=responseText.郵便番号.slice(0,3) + '-' + responseText.郵便番号.slice(3,7);
+                                        json.住所.都道府県=responseText.都道府県名;
+                                        json.住所.市区町村=responseText.市区町村名;
+                                        json.住所.番地=responseText.町域名;
+                                        Alpaca.fieldInstances["顧客"].setValue(json);
+                                    });
+                        });
+                    }
+                });
 
         jQuery("#customer .save").click(function () {
             Alpaca.fieldInstances["顧客"].validate(true);

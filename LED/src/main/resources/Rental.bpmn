@@ -293,7 +293,7 @@
       <bpmn2:dataInputAssociation id="_TTtBOYxTEeOD9qZpkI6inw">
         <bpmn2:targetRef>_10_TaskNameInput</bpmn2:targetRef>
         <bpmn2:assignment id="_TTtBOoxTEeOD9qZpkI6inw">
-          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_TTtBO4xTEeOD9qZpkI6inw">Contractor</bpmn2:from>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_TTtBO4xTEeOD9qZpkI6inw">Relation</bpmn2:from>
           <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_TTtBPIxTEeOD9qZpkI6inw">_10_TaskNameInput</bpmn2:to>
         </bpmn2:assignment>
       </bpmn2:dataInputAssociation>
