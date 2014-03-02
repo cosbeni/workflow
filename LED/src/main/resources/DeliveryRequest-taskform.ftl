@@ -48,10 +48,37 @@
                                     "schemaSource": Alpaca.user.server + "/server/design/schema/plenty?id=" + responseText.schema,
                                     "optionsSource": Alpaca.user.server + "/server/design/options/plenty?id=" + responseText.options + "&sid=" + responseText.schema,
                                     "viewSource": Alpaca.user.server + "/server/design/view/plenty/?id=" + responseText.view + "&sid=" + responseText.schema,
-                                    "data": data
+                                    "data": data,
+                                    "postRender": function(data) {
+                                        jQuery("input[name='契約開始月']").change(function(){
+                                            var term = jQuery("select[name='契約期間']").val();
+                                            if(term != ''){
+                                                jQuery("input[name='契約満了月']").val(Date.parse(jQuery("input[name='契約開始月']").val()).addMonths(parseInt(term)-1).toString('yyyy/MM'));
+                                            } else {
+                                                jQuery("input[name='契約満了月']").val('');
+                                            }
+                                        });
+                                        jQuery("select[name='契約期間']").change(function(){
+                                            var start = jQuery("input[name='契約開始月']").val();
+                                            var term = jQuery("select[name='契約期間']").val();
+                                            if(start != '' && term != ''){
+                                                jQuery("input[name='契約満了月']").val(Date.parse(start).addMonths(parseInt(term)-1).toString('yyyy/MM'));
+                                            } else {
+                                                jQuery("input[name='契約満了月']").val('');
+                                            }
+                                        });
+                                        jQuery("input[name='暫定レンタル料金（税別）']").change(function(){
+                                            var amount = jQuery("input[name='暫定レンタル料金（税別）']").val();
+                                            jQuery("input[name='暫定レンタル料金（税込）']").val(Math.floor(parseInt(amount)* 1.05));
+                                        });
+                                        jQuery("input[name='暫定レンタル料金（税込）']").change(function(){
+                                            var amount = jQuery("input[name='暫定レンタル料金（税込）']").val();
+                                            jQuery("input[name='暫定レンタル料金（税別）']").val(Math.ceil(parseInt(amount) / 1.05));
+                                        });
+                                    }
                                 });
                             });
-
+                            
                     var pageId = "顧客表示";
                     $.ajax({
                         url: Alpaca.user.server + "/server/design/page/plenty?id=" + pageId,
